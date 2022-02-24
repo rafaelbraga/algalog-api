@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @Entity
 public class Cliente {
 
-    @NotNull(groups = ValidadeGroups.ClienteID.class)
+//    @NotNull(groups = ValidadeGroups.ClienteID.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Cliente {
     @NotBlank
     @Size(max = 60)
     @Column(name = "nome")
-    private  String name;
+    private  String nome;
 
     @NotBlank
     @Email

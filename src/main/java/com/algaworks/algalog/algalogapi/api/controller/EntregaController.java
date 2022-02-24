@@ -1,9 +1,14 @@
 package com.algaworks.algalog.algalogapi.api.controller;
 
+import com.algaworks.algalog.algalogapi.api.model.DestinatarioModel;
+import com.algaworks.algalog.algalogapi.api.model.EntregaModel;
+import com.algaworks.algalog.algalogapi.api.model.input.EntregaInput;
+import com.algaworks.algalog.algalogapi.assembler.EntregaAssembler;
 import com.algaworks.algalog.algalogapi.domain.model.Entrega;
 import com.algaworks.algalog.algalogapi.domain.repository.EntregaRepository;
 import com.algaworks.algalog.algalogapi.domain.service.SolicitacaoEntregaService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,20 +23,21 @@ public class EntregaController {
 
     private SolicitacaoEntregaService solicitacaoEntregaService;
     private EntregaRepository entregaRepository;
+    private EntregaAssembler entregaAssembler;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Entrega solicitar( @Valid @RequestBody Entrega entrega){
-        return solicitacaoEntregaService.solicitar(entrega);
+    public EntregaModel solicitar( @Valid @RequestBody EntregaInput entregaInput){
+        return entregaAssembler.toModel(solicitacaoEntregaService.solicitar(entregaAssembler.toEntity(entregaInput)));
     }
 
     @GetMapping
-    public List<Entrega> listar(){
-        return entregaRepository.findAll();
+    public List<EntregaModel> listar(){
+        return entregaAssembler.toCollectionModel(entregaRepository.findAll());
     }
 
     @GetMapping("/{entregaId}")
-    public ResponseEntity<Entrega> buscar(@PathVariable Long entregaId){
-        return entregaRepository.findById(entregaId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<EntregaModel> buscar(@PathVariable Long entregaId){
+        return entregaRepository.findById(entregaId).map(entrega -> ResponseEntity.ok(entregaAssembler.toModel(entrega))).orElse(ResponseEntity.notFound().build());
     }
 }

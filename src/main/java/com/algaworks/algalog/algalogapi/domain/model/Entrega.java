@@ -13,6 +13,8 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,28 +26,31 @@ public class Entrega {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Valid
-    @ConvertGroup(from = Default.class, to = ValidadeGroups.ClienteID.class)
-    @NotNull
+//    @Valid
+//    @ConvertGroup(from = Default.class, to = ValidadeGroups.ClienteID.class)
+//    @NotNull
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+//
+//    @Valid
+//    @NotNull
+    @OneToMany(mappedBy = "entrega")
+    private List<Ocorrencia> ocorrencias = new ArrayList<>();
 
-    @Valid
-    @NotNull
     @Embedded
     private Destinatario destinatario;
 
-    @NotNull
+//    @NotNull
     private BigDecimal taxa;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Enumerated(EnumType.STRING)
     private StatusEntrega status;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime dataPedido;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime dataFinalizacao;
 }
